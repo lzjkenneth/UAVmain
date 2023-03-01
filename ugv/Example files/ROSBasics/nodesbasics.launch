@@ -1,0 +1,11 @@
+<launch>
+
+  <group ns="talker">
+    <node pkg="****pkg_name****" name="talker" type="talker"/>
+  </group>
+
+  <group ns="listener">
+    <node pkg="****pkg_name****" name="listener" type="listener"/>
+  </group>
+
+</launch>

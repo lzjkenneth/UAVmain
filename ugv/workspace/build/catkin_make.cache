@@ -1,0 +1,2 @@
+uav
+-DCATKIN_DEVEL_PREFIX=/home/user/github/ugv/workspace/devel -DCMAKE_INSTALL_PREFIX=/home/user/github/ugv/workspace/install -G Unix Makefiles

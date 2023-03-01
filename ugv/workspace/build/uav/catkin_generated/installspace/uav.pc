@@ -1,0 +1,8 @@
+prefix=/home/user/github/ugv/workspace/install
+
+Name: uav
+Description: Description of uav
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 

@@ -1,6 +1,6 @@
 # Workspace
 
-catkin_ws in ubuntu 20.04 running ROS noetic
+
 
 Remove build and devel files before running $ catkin_make
 

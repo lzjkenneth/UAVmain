@@ -1,8 +1,8 @@
-# Install script for directory: /home/user/github/ugv/workspace/src/uav
+# Install script for directory: /home/user/github/UAVmain/ugv/workspace/src/uav
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "/home/user/github/ugv/workspace/install")
+  set(CMAKE_INSTALL_PREFIX "/home/user/github/UAVmain/ugv/workspace/install")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -38,17 +38,17 @@ if(NOT DEFINED CMAKE_CROSSCOMPILING)
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" TYPE FILE FILES "/home/user/github/ugv/workspace/build/uav/catkin_generated/installspace/uav.pc")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" TYPE FILE FILES "/home/user/github/UAVmain/ugv/workspace/build/uav/catkin_generated/installspace/uav.pc")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/uav/cmake" TYPE FILE FILES
-    "/home/user/github/ugv/workspace/build/uav/catkin_generated/installspace/uavConfig.cmake"
-    "/home/user/github/ugv/workspace/build/uav/catkin_generated/installspace/uavConfig-version.cmake"
+    "/home/user/github/UAVmain/ugv/workspace/build/uav/catkin_generated/installspace/uavConfig.cmake"
+    "/home/user/github/UAVmain/ugv/workspace/build/uav/catkin_generated/installspace/uavConfig-version.cmake"
     )
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/uav" TYPE FILE FILES "/home/user/github/ugv/workspace/src/uav/package.xml")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/uav" TYPE FILE FILES "/home/user/github/UAVmain/ugv/workspace/src/uav/package.xml")
 endif()
 

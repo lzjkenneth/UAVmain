@@ -67,14 +67,14 @@ set(uav_CONFIG_INCLUDED TRUE)
 
 # set variables for source/devel/install prefixes
 if("FALSE" STREQUAL "TRUE")
-  set(uav_SOURCE_PREFIX /home/user/github/ugv/workspace/src/uav)
-  set(uav_DEVEL_PREFIX /home/user/github/ugv/workspace/devel)
+  set(uav_SOURCE_PREFIX /home/user/github/UAVmain/ugv/workspace/src/uav)
+  set(uav_DEVEL_PREFIX /home/user/github/UAVmain/ugv/workspace/devel)
   set(uav_INSTALL_PREFIX "")
   set(uav_PREFIX ${uav_DEVEL_PREFIX})
 else()
   set(uav_SOURCE_PREFIX "")
   set(uav_DEVEL_PREFIX "")
-  set(uav_INSTALL_PREFIX /home/user/github/ugv/workspace/install)
+  set(uav_INSTALL_PREFIX /home/user/github/UAVmain/ugv/workspace/install)
   set(uav_PREFIX ${uav_INSTALL_PREFIX})
 endif()
 
@@ -154,7 +154,7 @@ foreach(library ${libraries})
     set(lib_path "")
     set(lib "${library}-NOTFOUND")
     # since the path where the library is found is returned we have to iterate over the paths manually
-    foreach(path /home/user/github/ugv/workspace/install/lib;/home/user/github/ugv/workspace/devel/lib;/opt/ros/noetic/lib)
+    foreach(path /home/user/github/UAVmain/ugv/workspace/install/lib;/opt/ros/noetic/lib)
       find_library(lib ${library}
         PATHS ${path}
         NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH)

@@ -43,10 +43,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/user/github/ugv/workspace/src
+CMAKE_SOURCE_DIR = /home/user/github/UAVmain/ugv/workspace/src
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/user/github/ugv/workspace/build
+CMAKE_BINARY_DIR = /home/user/github/UAVmain/ugv/workspace/build
 
 # Utility rule file for std_msgs_generate_messages_py.
 
@@ -63,10 +63,10 @@ uav/CMakeFiles/std_msgs_generate_messages_py.dir/build: std_msgs_generate_messag
 .PHONY : uav/CMakeFiles/std_msgs_generate_messages_py.dir/build
 
 uav/CMakeFiles/std_msgs_generate_messages_py.dir/clean:
-	cd /home/user/github/ugv/workspace/build/uav && $(CMAKE_COMMAND) -P CMakeFiles/std_msgs_generate_messages_py.dir/cmake_clean.cmake
+	cd /home/user/github/UAVmain/ugv/workspace/build/uav && $(CMAKE_COMMAND) -P CMakeFiles/std_msgs_generate_messages_py.dir/cmake_clean.cmake
 .PHONY : uav/CMakeFiles/std_msgs_generate_messages_py.dir/clean
 
 uav/CMakeFiles/std_msgs_generate_messages_py.dir/depend:
-	cd /home/user/github/ugv/workspace/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/user/github/ugv/workspace/src /home/user/github/ugv/workspace/src/uav /home/user/github/ugv/workspace/build /home/user/github/ugv/workspace/build/uav /home/user/github/ugv/workspace/build/uav/CMakeFiles/std_msgs_generate_messages_py.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/user/github/UAVmain/ugv/workspace/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/user/github/UAVmain/ugv/workspace/src /home/user/github/UAVmain/ugv/workspace/src/uav /home/user/github/UAVmain/ugv/workspace/build /home/user/github/UAVmain/ugv/workspace/build/uav /home/user/github/UAVmain/ugv/workspace/build/uav/CMakeFiles/std_msgs_generate_messages_py.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : uav/CMakeFiles/std_msgs_generate_messages_py.dir/depend
 

@@ -43,10 +43,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/user/github/ugv/workspace/src
+CMAKE_SOURCE_DIR = /home/user/github/UAVmain/ugv/workspace/src
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/user/github/ugv/workspace/build
+CMAKE_BINARY_DIR = /home/user/github/UAVmain/ugv/workspace/build
 
 # Utility rule file for clean_test_results.
 
@@ -54,7 +54,7 @@ CMAKE_BINARY_DIR = /home/user/github/ugv/workspace/build
 include CMakeFiles/clean_test_results.dir/progress.make
 
 CMakeFiles/clean_test_results:
-	/usr/bin/python3 /opt/ros/noetic/share/catkin/cmake/test/remove_test_results.py /home/user/github/ugv/workspace/build/test_results
+	/usr/bin/python3 /opt/ros/noetic/share/catkin/cmake/test/remove_test_results.py /home/user/github/UAVmain/ugv/workspace/build/test_results
 
 clean_test_results: CMakeFiles/clean_test_results
 clean_test_results: CMakeFiles/clean_test_results.dir/build.make
@@ -71,6 +71,6 @@ CMakeFiles/clean_test_results.dir/clean:
 .PHONY : CMakeFiles/clean_test_results.dir/clean
 
 CMakeFiles/clean_test_results.dir/depend:
-	cd /home/user/github/ugv/workspace/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/user/github/ugv/workspace/src /home/user/github/ugv/workspace/src /home/user/github/ugv/workspace/build /home/user/github/ugv/workspace/build /home/user/github/ugv/workspace/build/CMakeFiles/clean_test_results.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/user/github/UAVmain/ugv/workspace/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/user/github/UAVmain/ugv/workspace/src /home/user/github/UAVmain/ugv/workspace/src /home/user/github/UAVmain/ugv/workspace/build /home/user/github/UAVmain/ugv/workspace/build /home/user/github/UAVmain/ugv/workspace/build/CMakeFiles/clean_test_results.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/clean_test_results.dir/depend
 

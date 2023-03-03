@@ -43,10 +43,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/user/github/ugv/workspace/src
+CMAKE_SOURCE_DIR = /home/user/github/UAVmain/ugv/workspace/src
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/user/github/ugv/workspace/build
+CMAKE_BINARY_DIR = /home/user/github/UAVmain/ugv/workspace/build
 
 # Utility rule file for sensor_msgs_generate_messages_cpp.
 
@@ -63,10 +63,10 @@ uav/CMakeFiles/sensor_msgs_generate_messages_cpp.dir/build: sensor_msgs_generate
 .PHONY : uav/CMakeFiles/sensor_msgs_generate_messages_cpp.dir/build
 
 uav/CMakeFiles/sensor_msgs_generate_messages_cpp.dir/clean:
-	cd /home/user/github/ugv/workspace/build/uav && $(CMAKE_COMMAND) -P CMakeFiles/sensor_msgs_generate_messages_cpp.dir/cmake_clean.cmake
+	cd /home/user/github/UAVmain/ugv/workspace/build/uav && $(CMAKE_COMMAND) -P CMakeFiles/sensor_msgs_generate_messages_cpp.dir/cmake_clean.cmake
 .PHONY : uav/CMakeFiles/sensor_msgs_generate_messages_cpp.dir/clean
 
 uav/CMakeFiles/sensor_msgs_generate_messages_cpp.dir/depend:
-	cd /home/user/github/ugv/workspace/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/user/github/ugv/workspace/src /home/user/github/ugv/workspace/src/uav /home/user/github/ugv/workspace/build /home/user/github/ugv/workspace/build/uav /home/user/github/ugv/workspace/build/uav/CMakeFiles/sensor_msgs_generate_messages_cpp.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/user/github/UAVmain/ugv/workspace/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/user/github/UAVmain/ugv/workspace/src /home/user/github/UAVmain/ugv/workspace/src/uav /home/user/github/UAVmain/ugv/workspace/build /home/user/github/UAVmain/ugv/workspace/build/uav /home/user/github/UAVmain/ugv/workspace/build/uav/CMakeFiles/sensor_msgs_generate_messages_cpp.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : uav/CMakeFiles/sensor_msgs_generate_messages_cpp.dir/depend
 

@@ -7,4 +7,7 @@
 # new environment variables
 
 # modified environment variables
-export PWD='/home/user/github/ugv/workspace/build'
+export CMAKE_PREFIX_PATH="/home/user/github/UAVmain/ugv/workspace/devel:$CMAKE_PREFIX_PATH"
+export PWD='/home/user/github/UAVmain/ugv/workspace/build'
+export ROSLISP_PACKAGE_DIRECTORIES='/home/user/github/UAVmain/ugv/workspace/devel/share/common-lisp'
+export ROS_PACKAGE_PATH="/home/user/github/UAVmain/ugv/workspace/src:$ROS_PACKAGE_PATH"

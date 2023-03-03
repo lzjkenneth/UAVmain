@@ -43,10 +43,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/user/github/ugv/workspace/src
+CMAKE_SOURCE_DIR = /home/user/github/UAVmain/ugv/workspace/src
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/user/github/ugv/workspace/build
+CMAKE_BINARY_DIR = /home/user/github/UAVmain/ugv/workspace/build
 
 # Utility rule file for tests.
 
@@ -67,6 +67,6 @@ CMakeFiles/tests.dir/clean:
 .PHONY : CMakeFiles/tests.dir/clean
 
 CMakeFiles/tests.dir/depend:
-	cd /home/user/github/ugv/workspace/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/user/github/ugv/workspace/src /home/user/github/ugv/workspace/src /home/user/github/ugv/workspace/build /home/user/github/ugv/workspace/build /home/user/github/ugv/workspace/build/CMakeFiles/tests.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/user/github/UAVmain/ugv/workspace/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/user/github/UAVmain/ugv/workspace/src /home/user/github/UAVmain/ugv/workspace/src /home/user/github/UAVmain/ugv/workspace/build /home/user/github/UAVmain/ugv/workspace/build /home/user/github/UAVmain/ugv/workspace/build/CMakeFiles/tests.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/tests.dir/depend
 

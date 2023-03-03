@@ -1,4 +1,4 @@
-prefix=/home/user/github/ugv/workspace/devel
+prefix=/home/user/github/UAVmain/ugv/workspace/devel
 
 Name: uav
 Description: Description of uav

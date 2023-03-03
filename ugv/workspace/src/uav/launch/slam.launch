@@ -45,4 +45,9 @@
     <include file="$(find uav)/launch/include/move_base_2wd.launch" />
 
     <node name="teleop" pkg="teleop_twist_keyboard" type="teleop_twist_keyboard.py" />
+    
+    
+    
+    <node pkg="rviz" type="rviz" name="rviz" args="-d $(find uav)/rviz/slam.rviz">
+    </node> 
 </launch>

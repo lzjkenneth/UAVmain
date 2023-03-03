@@ -1,9 +1,12 @@
 TrajectoryPlannerROS:
-  max_vel_x: 0.50
+  max_vel_x: 0.30
   min_vel_x: 0.10
   max_vel_theta: 3.0
   min_vel_theta: -3.0
   min_in_place_vel_theta: 2
+
+#The velocity the robot will command when trying to escape from a stuck situation
+  escape_vel: -0.1
 
   # acc theta 1.2	
   acc_lim_theta: 1.1

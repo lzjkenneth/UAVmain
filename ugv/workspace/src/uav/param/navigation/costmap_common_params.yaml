@@ -2,7 +2,12 @@ obstacle_range: 2.5
 raytrace_range: 3.0
 footprint: [[-0.15, -0.15], [-0.15, 0.15], [0.15, 0.15], [0.15, -0.15]]
 
+#Inscribed and circumscribed radius 
+inscribed_radius: 0.1
+circumscribed_radius: 0.12
+
 inflation_radius: 0.15
+cost_scaling_factor: 10.0
 
 transform_tolerance: 0.13
 

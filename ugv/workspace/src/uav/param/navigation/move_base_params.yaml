@@ -4,7 +4,7 @@ cost_factor: 1.0
 neutral_cost: 55
 lethal_cost: 253
 
-shutdown_costmaps: true
+shutdown_costmaps: false
 
 controller_frequency: 5.0
 controller_patience: 3.0

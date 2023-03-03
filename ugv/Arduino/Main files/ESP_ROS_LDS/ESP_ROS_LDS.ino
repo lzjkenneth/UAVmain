@@ -180,7 +180,7 @@ float intensity[360];
 
 
 //initializing all the variables
-#define LOOPTIME                      100     //Looptime in milliseconds
+
 
 // Defining pins
 
@@ -271,6 +271,11 @@ int result;              // sensor output variable
 unsigned long lastTime = 0;
 unsigned long lastMilli = 0;
 unsigned long PIDlastMilli = 0;
+unsigned long LDSlastMilli = 0;
+
+#define LOOPTIME                      100     //Looptime in milliseconds
+int PIDLOOPTIME = 20;
+int LDSLOOPTIME = 200;
 
 hw_timer_t * My_timer = NULL;
 
@@ -839,8 +844,8 @@ void publishLIDAR(unsigned long time)
   lidar_msg.angle_min = 0.0;
   lidar_msg.angle_max = two_pi;
   lidar_msg.angle_increment = (two_pi / 360);
-  lidar_msg.time_increment = 0.0005; //motor_speed/good_sets/1e8;
-  lidar_msg.scan_time = 0.2;
+  lidar_msg.time_increment = (double(time) / 1000) / 360; // scan time / points
+  lidar_msg.scan_time = double(time) / 1000; // time since last call, ms to s
   lidar_msg.range_min = 0.06;
   lidar_msg.range_max = 5.00;
   lidar_msg.ranges_length = 360;
@@ -2180,7 +2185,7 @@ void loop()
   nh.spinOnce();
 
 
-  if ((millis() - PIDlastMilli) >= period)
+  if ((millis() - PIDlastMilli) >= PIDlooptime)
   { // enter PID timed loop
 
     //        getMotorData(millis() - PIDlastMilli);
@@ -2226,9 +2231,6 @@ void loop()
     getAccReadings();
     publishIMU(millis() - lastMilli);
 
-    getLidarReadings();
-    publishLIDAR(millis() - lastMilli);
-
     getMotorDataPub(millis() - lastMilli);   // getMotorData since last publish
     publishODOM(millis() - lastMilli);
 
@@ -2239,6 +2241,16 @@ void loop()
   }
 
 
+
+  LDSLOOPTIME = (60 / motor_rpm) * 1000;
+  if ((millis() - LDSlastMilli) >= LDSLOOPTIME)
+  { // enter LDS timed loop
+    // publish every 200ms
+
+    publishLIDAR(millis() - LDSlastmilli);
+
+    nh.spinOnce();
+  }
 
 
 

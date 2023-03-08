@@ -9,7 +9,8 @@ https://docs.google.com/presentation/d/1lEfbR9fRl8ANOhZGFfqDtVsO-UvMW82fzk3icxjL
 ROS tutorials:
 http://wiki.ros.org/ROS/Tutorials
 
-The robot localization package: http://docs.ros.org/en/noetic/api/robot_localization/html/index.html
+The robot localization package:
+http://docs.ros.org/en/noetic/api/robot_localization/html/index.html
 
 The navigation stack:
 http://wiki.ros.org/navigation/Tutorials/RobotSetup

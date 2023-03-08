@@ -1,9 +1,8 @@
 # ugv
 
-<<<<<<< HEAD
-test
-=======
 Source code for the completed UGV by UAVionics techs!
+
+# Directory
 
 Arduino -> Arduino .ino and library files for the low level controller
 
@@ -19,7 +18,7 @@ more documentation is on the way!
 
 
 
-LDS connections:
+# LDS connections:
 
 
 

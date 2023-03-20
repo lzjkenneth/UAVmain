@@ -1,6 +1,7 @@
 # ugv
 
-Source code for the completed UGV by UAVionics techs!
+Source code for the UGV by UAVionics techs!
+This project is ongoing and maintained for educational purposes! Stay tuned for additional features and improvements!
 
 ## Directory
 

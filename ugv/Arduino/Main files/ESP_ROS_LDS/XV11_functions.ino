@@ -1,3 +1,13 @@
+/*
+  XV Lidar Controller v1.4.1
+  Copyright 2014-2016 James LeRoy getSurreal
+  https://github.com/getSurreal/XV_Lidar_Controller
+  http://www.getsurreal.com/products/xv-lidar-controller
+  Contributions by:
+    Doug Hilton mailto: six.speed (at) yahoo (dot) com
+  See README for additional information
+  The F() macro in the Serial statements tells the compiler to keep your strings in PROGMEM
+*/
 
 void setupXV11() {
 
@@ -10,9 +20,9 @@ void setupXV11() {
 #if defined(__AVR_ATmega32U4__)
   Serial1.begin(115200);      // XV LDS data
 #elif defined(__MK20DX256__)  // if Teensy 3.1
-  Serial1.begin(115200);  // XV LDS data
+  Serial1.begin(115200);        // XV LDS data
 #elif defined(__MKL26Z64__)   // if Teensy LC
-  Serial1.begin(115200);  // XV LDS data
+  Serial1.begin(115200);         // XV LDS data
 #elif defined(ESP32)          // if Teensy LC
   Serial1.begin(115200, SERIAL_8N1, 16, 4);  // XV LDS data Rx Tx
 #endif
@@ -108,9 +118,10 @@ void getXV11Readings() {
                   range[startingAngle + ix] = float(aryDist[ix]) / 1000;  //mm to m
                   intensity[startingAngle + ix] = float(aryQuality[ix]);
                 }
-              }                            // if (xv_config.aryAngles[startingAngle + ix])
-            }                              // for (int ix = 0; ix < N_DATA_QUADS; ix++)
-          }                                // if (xv_config.show_dist)
+              }  // if (xv_config.aryAngles[startingAngle + ix])
+            }    // for (int ix = 0; ix < N_DATA_QUADS; ix++)
+          }      // if (xv_config.show_dist)
+          currentAngle = startingAngle + 3;
         }                                  // if (eValidatePacket() == 0
         else if (xv_config.show_errors) {  // we have encountered a CRC error
           Serial.println(F("C,CRC"));
@@ -895,5 +906,3 @@ void saveConfig() {
   EEPROM_writeAnything(0, xv_config);
   Serial.println(F("Config Saved."));
 }
-
-

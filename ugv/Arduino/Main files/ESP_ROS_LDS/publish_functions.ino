@@ -1,17 +1,21 @@
+// ROS functions for publishing messages
+
+
+
 void publishIMU(unsigned long time) {  // require getGyroReadings() and getAccReadings()
 
   current_time = nh.now();
   dt = double(time) / 1000;  //Time in s
 
-  dth_gyro = dt * gZ;
+  dth_gyro = dt * gyroZ;
   theta_gyro += dth_gyro;
 
   imu_msg.header.stamp = nh.now();
   imu_msg.header.frame_id = imu_link;
 
-  imu_msg.linear_acceleration.x = aX;
-  imu_msg.linear_acceleration.y = aY;
-  imu_msg.linear_acceleration.z = aZ;
+  imu_msg.linear_acceleration.x = accelX;
+  imu_msg.linear_acceleration.y = 0; // accelY = 0, nonholonomic robot
+  imu_msg.linear_acceleration.z = 0; // accelZ = 0, planar robot
 
   imu_msg.linear_acceleration_covariance[0] = 0.04;
   imu_msg.linear_acceleration_covariance[1] = 0;
@@ -25,9 +29,9 @@ void publishIMU(unsigned long time) {  // require getGyroReadings() and getAccRe
   imu_msg.linear_acceleration_covariance[7] = 0;
   imu_msg.linear_acceleration_covariance[8] = 0.04;
 
-  imu_msg.angular_velocity.x = gX;
-  imu_msg.angular_velocity.y = gY;
-  imu_msg.angular_velocity.z = gZ;
+  imu_msg.angular_velocity.x = 0; // gyroX = 0, planar robot
+  imu_msg.angular_velocity.y = 0; // gyroY = 0, planar robot
+  imu_msg.angular_velocity.z = gyroZ;
 
   imu_msg.angular_velocity_covariance[0] = 0.02;
   imu_msg.angular_velocity_covariance[1] = 0;
@@ -58,8 +62,6 @@ void publishIMU(unsigned long time) {  // require getGyroReadings() and getAccRe
   imu_msg.orientation_covariance[8] = 0.0025;
 
   imu.publish(&imu_msg);
-  //  nh.spinOnce();
-  //  nh.loginfo("Publishing imu");
 }
 
 void publishLIDAR(unsigned long time) {
@@ -77,11 +79,9 @@ void publishLIDAR(unsigned long time) {
   lidar_msg.intensities = intensity;
   lidar.publish(&lidar_msg);
 
-  lastAngle = currentAngle; // register index of latest range data
+  lastAngle = currentAngle; // register index of latest range data for validation purposes
   memset(range, 0, sizeof(range)); //clear array in the event errors preserve old data
   memset(intensity, 0, sizeof(intensity));
-  //  nh.spinOnce();
-  //  nh.loginfo("Publishing lidar");
 }
 
 void publishODOM(unsigned long time) {  // require getMotorDataPub()
@@ -104,9 +104,6 @@ void publishODOM(unsigned long time) {  // require getMotorDataPub()
   dxy = vx * dt;        // Change in position, displacement, in m
   dth_odom = vth * dt;  // Change in yaw, angular displacement, in m
 
-  //  nh.loginfo("dt : %f", dt);
-  //  nh.loginfo("dxy : %f", dxy);
-
   // extract change in x and change in y
   dx = cos(dth_odom) * dxy;  // Change in x position
   dy = sin(dth_odom) * dxy;  // Change in y position
@@ -114,9 +111,6 @@ void publishODOM(unsigned long time) {  // require getMotorDataPub()
   // add change in x and change in y to position variable
   x_pos += dx;
   y_pos += dy;
-
-  //  x_pos += (cos(theta_odom) * dx - sin(theta_odom) * dy);
-  //  y_pos += (sin(theta_odom) * dx + cos(theta_odom) * dy);
 
   // add change in yaw to yaw variable
   theta_odom += dth_odom;
@@ -206,10 +200,4 @@ void publishODOM(unsigned long time) {  // require getMotorDataPub()
     broadcaster.sendTransform(I);
   }
 
-  //  Serial.println("dt: " + String(dt) + "  theta_odom: " + String(dxy));
-  //  Serial.println("dx: " + String(dx) + "  dy: " + String(dy));
-  //  Serial.println("x_pos: " + String(x_pos) + "  y_pos: " + String(y_pos));
-  //  Serial.println("dth_odom: " + String(dth_odom) + "  theta_odom: " + String(theta_odom));
-  //  nh.spinOnce();
-  //  nh.loginfo("Publishing odom");
 }

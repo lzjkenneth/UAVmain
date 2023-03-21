@@ -228,36 +228,38 @@ int currentAngle = 0;  // current angle per lds packet data, 0-359
 //float range[8] = {0, 0, 0, 0, 0, 0, 0, 0};
 //float range_target_status[8] = {0, 0, 0, 0, 0, 0, 0, 0};
 
-MPU9250_asukiaaa mySensor;     // Creating IMU object
-float aX, aY, aZ, aSqrt;       // accelerometer variables
-float gX, gY, gZ;              // gyroscope variables
-float mX, mY, mZ, mDirection;  // magnetometer variables
+MPU9250_asukiaaa mySensor;            // Creating IMU object
+float accelX, accelY, accelZ, aSqrt;  // accelerometer variables
+float gyroX, gyroY, gyroZ;            // gyroscope variables
+float mX, mY, mZ, mDirection;         // magnetometer variables
 
 float roll, pitch, yaw;  // rotation axis variables
+
+
 
 //Sensor calibration iterations
 int num_calibration_itrs = 1000;
 
+
 //Gyroscope sensor offsets
+int gyroCalibrated = 0;
 float gyroXoffset = 0.00;  // default: 0.08
 float gyroYoffset = 0.00;  // default: 1.70
 float gyroZoffset = 0.00;  // default: 1.25
-int gyroCalibrated = 0;
-
-float gXscale = 1.15;
-float gYscale = 1.15;
-float gZscale = 1.15;
+float gyroXscale = 1.15;
+float gyroYscale = 1.15;
+float gyroZscale = 1.15;
 
 
 //Accelerometer sensor offsets
+int accCalibrated = 0;
 float accelXoffset = 0.00;
 float accelYoffset = 0.00;
 float accelZoffset = 0.00;
-int accCalibrated = 0;
+float accelXscale = 1;
+float accelYscale = 1;
+float accelZscale = 1;
 
-float aXscale = 1;
-float aYscale = 1;
-float aZscale = 1;
 
 //Magnetometer sensor offsets
 float magXoffset = 0.00;  // default: -50
@@ -303,10 +305,11 @@ hw_timer_t *My_timer = NULL;
 
 // Differential drive working variables and constants
 
-// conversion of motor direction to integers
-int FORWARD = 0;
-int BACKWARD = 1;
-int RELEASE = 2;
+// definition of motor directions to integers
+
+#define FORWARD 1
+#define BACKWARD 2
+#define RELEASE 3
 
 // register motor direction for counter
 int IRAM_ATTR direction1 = FORWARD;
@@ -540,13 +543,13 @@ void setupSensors() {
   //  myImager.startRanging();
 
   mySensor.setWire(&Wire);
-  Serial.println("Initializing GY-91. This can take up to 10s. Please wait.");
+  Serial.println("Initializing gyroY-91. This can take up to 10s. Please wait.");
   if (mySensor.readId(&sensorId) != 0) {
-    Serial.println(F("GY-91 not found - check your wiring. Freezing"));
+    Serial.println(F("gyroY-91 not found - check your wiring. Freezing"));
     while (1)
       ;
   }
-  Serial.println(F("GY-91 found!"));
+  Serial.println(F("gyroY-91 found!"));
   mySensor.beginAccel(ACC_FULL_SCALE_2_G);
   mySensor.beginGyro(GYRO_FULL_SCALE_250_DPS);
   mySensor.beginMag();
@@ -565,65 +568,71 @@ void setupSensors() {
 
 
 
+// Calibrate gyroscope
+void calibrateGyro() {  // Halt motion whilst calibrating
+  gyroX = 0;            // erasing existing gyro data
+  gyroY = 0;
+  gyroZ = 0;
 
-void calibrateGyro()  // Halt motion whilst calibrating
-{                     // Halt motion whilst calibrating
-  gX = 0;             // erasing existing gyro data
-  gY = 0;
-  gZ = 0;
+  // Perform multiple readings for calibration
   for (int count = 0; count < num_calibration_itrs; count++) {
-    //Poll GY-91 for new data
+    //Poll gyroY-91 for new data
     if (mySensor.gyroUpdate() == 0) {
-      gX = mySensor.gyroX();
-      gY = mySensor.gyroY();
-      gZ = mySensor.gyroZ();
-      Serial.println("gX: " + String(gX) + "gY: " + String(gY) + "gZ: " + String(gZ));
+      gyroX = mySensor.gyroX();
+      gyroY = mySensor.gyroY();
+      gyroZ = mySensor.gyroZ();
+      Serial.println("gyroX: " + String(gyroX) + "gyroY: " + String(gyroY) + "gyroZ: " + String(gyroZ));
     } else {
       Serial.println("Cannot read gyro values " + String(result));
       return;
     }
 
-    gyroXoffset += gX;
-    gyroYoffset += gY;
-    gyroZoffset += gZ;
+    gyroXoffset += gyroX;
+    gyroYoffset += gyroY;
+    gyroZoffset += gyroZ;
   }
 
+  // Compute offsets
   gyroXoffset /= num_calibration_itrs;
   gyroYoffset /= num_calibration_itrs;
   gyroZoffset /= num_calibration_itrs;
 
+  // Print calibrated offsets
   Serial.println("gyroXoffset: " + String(gyroXoffset) + "gyroYoffset: " + String(gyroYoffset) + "gyroZoffset: " + String(gyroZoffset));
   gyroCalibrated = 1;
 }
 
-void calibrateAccel()  // Halt motion whilst calibrating
-{                      // Halt motion whilst calibrating
-  aX = 0;              // erasing existing gyro data
-  aY = 0;
-  aZ = 0;
+// Calibrate accelerometer
+void calibrateAccel() {  // Halt motion whilst calibrating
+  accelX = 0;            // erasing existing gyro data
+  accelY = 0;
+  accelZ = 0;
 
+  // Perform multiple readings for calibration
   for (int count = 0; count < num_calibration_itrs; count++) {
-    //Poll GY-91 for new data
+    //Poll gyroY-91 for new data
     if (mySensor.accelUpdate() == 0) {
-      aX = mySensor.accelX();
-      aY = mySensor.accelY();
-      aZ = mySensor.accelZ();
-      Serial.println("aX: " + String(aX) + "aY: " + String(aY) + "aZ: " + String(aZ));
+      accelX = mySensor.accelX();
+      accelY = mySensor.accelY();
+      accelZ = mySensor.accelZ();
+      Serial.println("accelX: " + String(accelX) + "accelY: " + String(accelY) + "accelZ: " + String(accelZ));
     } else {
       Serial.println("Cannot read accel values " + String(result));
       return;
     }
 
-    accelXoffset += aX;
-    accelYoffset += aY;
-    accelZoffset += aZ;
+    accelXoffset += accelX;
+    accelYoffset += accelY;
+    accelZoffset += accelZ;
   }
 
+  // Compute offsets
   accelXoffset /= num_calibration_itrs;
   accelYoffset /= num_calibration_itrs;
   accelZoffset /= num_calibration_itrs;
   accelZoffset -= 1;  // Remove gravity from the z-axis
 
+  // Print calibrated offsets
   Serial.println("accelXoffset: " + String(accelXoffset) + "accelYoffset: " + String(accelYoffset) + "accelZoffset: " + String(accelZoffset));
   accCalibrated = 1;
 }
@@ -633,46 +642,55 @@ void calibrateAccel()  // Halt motion whilst calibrating
 
 
 
-
+// Get gyroscope readings
 void getGyroReadings() {
-  gX = 0;  // clear data
-  gY = 0;
-  gZ = 0;
-  //Poll GY-91 for new data
+  gyroX = 0;  // clear data
+  gyroY = 0;
+  gyroZ = 0;
+
+  //Poll gyroY-91 for new data
   if (mySensor.gyroUpdate() == 0) {
-    gX = mySensor.gyroX() - gyroXoffset;
-    gY = mySensor.gyroY() - gyroYoffset;
-    gZ = mySensor.gyroZ() - gyroZoffset;
-    // invert values and change from deg/s to rad/s
-    gX *= pi / -180;
-    gY *= pi / -180;
-    gZ *= pi / -180;
-    gX *= gXscale;
-    gY *= gYscale;
-    gZ *= gZscale;
-    //    Serial.println("gX: " + String(gX) + "gY: " + String(gY) + "gZ: " + String(gZ));
+    gyroX = mySensor.gyroX() - gyroXoffset;
+    gyroY = mySensor.gyroY() - gyroYoffset;
+    gyroZ = mySensor.gyroZ() - gyroZoffset;
+
+    // invert values and convert from deg/s to rad/s
+    gyroX *= pi / -180;
+    gyroY *= pi / -180;
+    gyroZ *= pi / -180;
+
+    // scale values
+    gyroX *= gyroXscale;
+    gyroY *= gyroYscale;
+    gyroZ *= gyroZscale;
+    //    Serial.println("gyroX: " + String(gyroX) + "gyroY: " + String(gyroY) + "gyroZ: " + String(gyroZ));
 
   } else {
     Serial.println("Cannot read gyro values " + String(result));
   }
 }
 
+// Get accelerometer readings
 void getAccReadings() {
-  aX = 0;  // clear data
-  aY = 0;
-  aZ = 0;
-  //Poll GY-91 for new data
+  accelX = 0;  // clear data
+  accelY = 0;
+  accelZ = 0;
+
+  //Poll gyroY-91 for new data
   if (mySensor.accelUpdate() == 0) {
-    aX = mySensor.accelX() - accelXoffset;
-    aY = mySensor.accelY() - accelYoffset;
-    aZ = mySensor.accelZ() - accelZoffset;
-    // Convert to m/s^2
-    aX *= 9.80665;
-    aY *= 9.80665;
-    aZ *= 9.80665;
-    aX *= aXscale;
-    aY *= aYscale;
-    aZ *= aZscale;
+    accelX = mySensor.accelX() - accelXoffset;
+    accelY = mySensor.accelY() - accelYoffset;
+    accelZ = mySensor.accelZ() - accelZoffset;
+
+    // Convert from g to m/s^2
+    accelX *= 9.80665;
+    accelY *= 9.80665;
+    accelZ *= 9.80665;
+
+    // scale values
+    accelX *= accelXscale;
+    accelY *= accelYscale;
+    accelZ *= accelZscale;
   }
   //    aSqrt = mySensor.accelSqrt();
   else {
@@ -680,11 +698,13 @@ void getAccReadings() {
   }
 }
 
+// Get magnetometer readings
 void getMagReadings() {
   mX = 0;  // clear data
   mY = 0;
   mZ = 0;
-  //Poll GY-91 for new data
+
+  //Poll gyroY-91 for new data
   if (mySensor.magUpdate() == 0) {
     mX = mySensor.magX();
     mY = mySensor.magY();
@@ -742,7 +762,7 @@ void getLidarReadings() {
 
 
 
-
+// Motor Data functions
 void getMotorDataPub(unsigned long time) {  // for publishODOM()
   rpm_act1Pub = double((posA - countAnt1Pub) * 60 * 1000) / double(time * encoder_cpr * gear_ratio);
   rpm_act2Pub = double((posB - countAnt2Pub) * 60 * 1000) / double(time * encoder_cpr * gear_ratio);
@@ -762,33 +782,37 @@ void getMotorData(unsigned long time) {  // for updatePid()
   speed_act2 = (rpm_act2 * pi * wheel_diameter) / 60;
 }
 
-
-int updatePid(int id, int command, double targetValue, double currentValue) {  // compute new pwm values
-  double pidTerm = 0;                                                          // PID correction
-  double error = 0;
-  double new_pwm = 0;
-  double new_cmd = 0;
+// PID function
+int updatePid(int id, int command, double targetValue, double currentValue, double Kp, double Ki, double Kd) {
+  double pidTerm = 0;
+  double error = targetValue - currentValue;
   static double last_error1 = 0;
   static double last_error2 = 0;
   static double int_error1 = 0;
   static double int_error2 = 0;
 
-  error = targetValue - currentValue;
   if (id == 1) {
     int_error1 += error;
+    int_error1 = constrain(int_error1, -MAX_RPM, MAX_RPM);  // Prevent integral windup
     pidTerm = Kp * error + Kd * (error - last_error1) + Ki * int_error1;
     last_error1 = error;
   } else {
     int_error2 += error;
+    int_error2 = constrain(int_error2, -MAX_RPM, MAX_RPM);  // Prevent integral windup
     pidTerm = Kp * error + Kd * (error - last_error2) + Ki * int_error2;
     last_error2 = error;
   }
-  new_pwm = constrain(double(command) * MAX_RPM / 255.0 + pidTerm, -MAX_RPM, MAX_RPM);
-  new_cmd = 255.0 * new_pwm / MAX_RPM;
+
+  double new_pwm = constrain(double(command) * MAX_RPM / 255.0 + pidTerm, -MAX_RPM, MAX_RPM);
+  double new_cmd = 255.0 * new_pwm / MAX_RPM;
   return int(new_cmd);
 }
 
-void IRAM_ATTR encoder1() {  // count encoder ticks for motor A
+
+
+// Interrupt functions
+// count encoder ticks for motor A
+void IRAM_ATTR encoder1() {
   if (direction1 == FORWARD) {
     posA++;
   }
@@ -796,8 +820,8 @@ void IRAM_ATTR encoder1() {  // count encoder ticks for motor A
     posA--;
   }
 }
-
-void IRAM_ATTR encoder2() {  // count encoder ticks for motor B
+// count encoder ticks for motor B
+void IRAM_ATTR encoder2() {
   if (direction2 == FORWARD) {
     posB++;
   }
@@ -810,8 +834,8 @@ void IRAM_ATTR encoder2() {  // count encoder ticks for motor B
 
 
 
-
-void motor1run(int direct) {  // set pin logic for motor A direction
+// set pin logic for motor A direction
+void motor1run(int direct) {
   if (direct == FORWARD) {
     digitalWrite(STANDBY, HIGH);
     digitalWrite(MA1, HIGH);
@@ -827,8 +851,8 @@ void motor1run(int direct) {  // set pin logic for motor A direction
   }
 }
 
-
-void motor2run(int direct) {  // set pin logic for motor B direction
+// set pin logic for motor B direction
+void motor2run(int direct) {
   if (direct == FORWARD) {
     digitalWrite(STANDBY, HIGH);
     digitalWrite(MB1, LOW);
@@ -902,18 +926,22 @@ void IRAM_ATTR onTimer() {  // simple function to be called every period
   getMotorData(millis() - PIDlastMilli);
   PIDlastMilli = millis();  // pass millis() into lastMilli
 
-  PWM_val1 = updatePid(1, PWM_val1, rpm_req1, rpm_act1);
-  PWM_val2 = updatePid(2, PWM_val2, rpm_req2, rpm_act2);
+  PWM_val1 = updatePid(1, PWM_val1, rpm_req1, rpm_act1, Kp, Ki, Kd);
+  PWM_val2 = updatePid(2, PWM_val2, rpm_req2, rpm_act2, Kp, Ki, Kd);
 
   if (PWM_val1 > 0) direction1 = FORWARD;
   else if (PWM_val1 < 0) direction1 = BACKWARD;
-  if (rpm_req1 == 0) direction1 = RELEASE;
-  if (rpm_req1 == 0) PWM_val1 = 0;
+  if (rpm_req1 == 0) {
+    direction1 = RELEASE;
+    PWM_val1 = 0;
+  }
 
   if (PWM_val2 > 0) direction2 = FORWARD;
   else if (PWM_val2 < 0) direction2 = BACKWARD;
-  if (rpm_req2 == 0) direction2 = RELEASE;
-  if (rpm_req2 == 0) PWM_val2 = 0;
+  if (rpm_req2 == 0) {
+    direction2 = RELEASE;
+    PWM_val2 = 0;
+  }
 
   motor1run(direction1);
   motor2run(direction2);
@@ -961,8 +989,12 @@ void setup() {
 
 
 void loop() {
+  // put your main code here, to run repeatedly
+  nh.spinOnce();
+
 
   getXV11Readings();  // poll packet of data from LDS
+
 
   if (currentAngle == 359) {  // enter LDS publish on full LDS revolution
     // publish every ~200ms
@@ -971,31 +1003,8 @@ void loop() {
     nh.spinOnce();
   }
 
-  // LDSLOOPTIME = (60 / motor_rpm) * 1000;
-  // if ((millis() - LDSlastMilli) >= LDSLOOPTIME) {  // enter LDS timed loop
-  //   // publish every ~200ms
-  //   publishLIDAR(millis() - LDSlastMilli);
-  //   LDSlastMilli = millis();
-  //   nh.spinOnce();
-  // }
-
-
-  // put your main code here, to run repeatedly
-  nh.spinOnce();
-
-
-  if ((millis() - PIDlastMilli) >= PIDLOOPTIME) {  // enter PID timed loop
-  }
-
 
   if ((millis() - lastMilli) >= LOOPTIME) {  // enter timed loop
-
-    //  Serial.println("direction1: " + String(direction1) + "  direction2: " + String(direction2));
-    //  Serial.println("rpm_req1: " + String(rpm_req1) + "  rpm_req2: " + String(rpm_req2));
-    //  Serial.println("speed_act1Pub: " + String(speed_act1Pub) + "  speed_act2Pub: " + String(speed_act2Pub));
-    //  Serial.println("posA: " + String(posA) + "  posB: " + String(posB));
-    //        Serial.println("PWM_val1: " + String(PWM_val1) + "  PWM_val2: " + String(PWM_val2));
-    //        Serial.println("rpm_act1Pub: " + String(rpm_act1Pub) + "  rpm_act2Pub: " + String(rpm_act2Pub));
 
     getGyroReadings();
     getAccReadings();
@@ -1004,9 +1013,7 @@ void loop() {
     getMotorDataPub(millis() - lastMilli);  // getMotorData since last publish
     publishODOM(millis() - lastMilli);
 
-    //    Serial.println("LOOPTIME: " + String((millis() - lastMilli)));
     lastMilli = millis();  // pass millis() into lastMilli
-
     nh.spinOnce();
   }
 

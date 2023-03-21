@@ -19,9 +19,9 @@ more documentation is on the way!
 
 
 
-#### LDS extension:
+### LDS extension:
 
-##### An LDS was added in continuation of this project! Here are the connection details as follows:
+#### An LDS was added in continuation of this project! Here are the connection details as follows:
 
 XIAOMI 1S LDS pinouts
 

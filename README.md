@@ -1,5 +1,6 @@
 # UAVmain
 UAVmain page for the UAVenture compentition! Complete documentation and source codes found here!
+More information can be found in ugv
 
 ### Component slides:
 https://docs.google.com/presentation/d/1lEfbR9fRl8ANOhZGFfqDtVsO-UvMW82fzk3icxjLnNo/edit?usp=sharing
@@ -8,6 +9,7 @@ https://docs.google.com/presentation/d/1lEfbR9fRl8ANOhZGFfqDtVsO-UvMW82fzk3icxjL
 ### Useful reads!
 ROS tutorials:
 http://wiki.ros.org/ROS/Tutorials
+https://roboticsknowledgebase.com/wiki/common-platforms/ros/ros-intro/
 
 The robot localization package:
 http://docs.ros.org/en/noetic/api/robot_localization/html/index.html

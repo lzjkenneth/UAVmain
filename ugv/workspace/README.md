@@ -26,6 +26,7 @@ Required packages:
 
 ## robot_localization
 http://docs.ros.org/en/noetic/api/robot_localization/html/configuring_robot_localization.html
+https://github.com/methylDragon/ros-sensor-fusion-tutorial/blob/master/01%20-%20ROS%20and%20Sensor%20Fusion%20Tutorial.md
 
 #### Don't Repeat Data
 Only fuse primary sources from odom(yaw and x_vel) and IMU(yaw_vel and x_accel):  

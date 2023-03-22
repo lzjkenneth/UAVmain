@@ -170,7 +170,6 @@ int currentAngle = 0;  // current angle per lds packet data, 0-359
 #include <MPU9250_asukiaaa.h>
 
 #include <ros.h>
-#include <tf/transform_broadcaster.h>
 #include <tf/tf.h>  // for tf::createQuaternionFromYaw()
 #include <nav_msgs/Odometry.h>
 
@@ -228,6 +227,8 @@ int currentAngle = 0;  // current angle per lds packet data, 0-359
 //float range[8] = {0, 0, 0, 0, 0, 0, 0, 0};
 //float range_target_status[8] = {0, 0, 0, 0, 0, 0, 0, 0};
 
+
+// IMU variables
 MPU9250_asukiaaa mySensor;            // Creating IMU object
 float accelX, accelY, accelZ, aSqrt;  // accelerometer variables
 float gyroX, gyroY, gyroZ;            // gyroscope variables
@@ -235,11 +236,8 @@ float mX, mY, mZ, mDirection;         // magnetometer variables
 
 float roll, pitch, yaw;  // rotation axis variables
 
-
-
 //Sensor calibration iterations
 int num_calibration_itrs = 1000;
-
 
 //Gyroscope sensor offsets
 int gyroCalibrated = 0;
@@ -250,7 +248,6 @@ float gyroXscale = 1.15;
 float gyroYscale = 1.15;
 float gyroZscale = 1.15;
 
-
 //Accelerometer sensor offsets
 int accCalibrated = 0;
 float accelXoffset = 0.00;
@@ -259,7 +256,6 @@ float accelZoffset = 0.00;
 float accelXscale = 1;
 float accelYscale = 1;
 float accelZscale = 1;
-
 
 //Magnetometer sensor offsets
 float magXoffset = 0.00;  // default: -50
@@ -278,9 +274,10 @@ unsigned long lastMilli = 0;
 unsigned long PIDlastMilli = 0;
 unsigned long LDSlastMilli = 0;
 
-#define LOOPTIME 100  //Looptime in milliseconds
-int PIDLOOPTIME = 20;
-int LDSLOOPTIME = 200;
+#define pubFreq 20;
+int LOOPTIME = 1000 / pubFreq;    // Publisher Looptime in milliseconds (50ms)
+#define pidFreq 50;
+int PIDLOOPTIME = 1000 / pidFreq; // PID Looptime in milliseconds (20ms)
 
 hw_timer_t *My_timer = NULL;
 
@@ -359,12 +356,7 @@ const uint16_t serverPort = 11411;  // tcp socket port
 // ROS nodes //
 ros::NodeHandle nh;  // edited in ros.h to be NodeHandle_<ArduinoHardware, 10, 10, 2048, 2048> NodeHandle; // default 25, 25, 512, 512
 
-tf::TransformBroadcaster broadcaster;
-
 // ROS message types
-geometry_msgs::TransformStamped t;  // transformation frame for odom to base_link
-geometry_msgs::TransformStamped l;  // transformation frame for lidar to base_link
-geometry_msgs::TransformStamped I;  // transformation frame for imu_link to base_link
 
 nav_msgs::Odometry odom_msg;       // Odometry message
 geometry_msgs::Twist cmd_msg;      // cmd_vel message velocity
@@ -404,8 +396,6 @@ double linear_scale_negative = 1;
 double angular_scale_positive = 1;
 double angular_scale_negative = 1;
 
-// odometry and transform variables
-
 // odometry variables for coordinate positioning and orientation
 double x_pos = 0.0;
 double y_pos = 0.0;
@@ -414,7 +404,6 @@ double theta_odom = 0.0;
 double theta_gyro = 0.0;
 
 // transform variables for coordinate positioning and orientation
-bool publish_tf = false;  // disable tf publishing
 double dt = 0.0;
 double dx = 0.0;
 double dy = 0.0;
@@ -425,18 +414,17 @@ double dxy = 0.0;
 double vx = 0.0;
 double vy = 0.0;
 double vth = 0.0;
-char base_link[] = "base_link";
+
+// frame_ids
+char base_link[] = "base_link"; // unused, frame linked using static_transform_publisher in ros
 char odom[] = "odom";
 char laser[] = "laser";
 char imu_link[] = "imu_link";
-char camera_link[] = "camera_link";
-char dummy_link[] = "dummy_link";
 
 // ROS subscriber callback
 void handle_cmd(const geometry_msgs::Twist &cmd_msg) {
   double linear_velocity = cmd_msg.linear.x;    // in m/s
   double angular_velocity = cmd_msg.angular.z;  // in rad/s
-
 
   // (linear_velocity * 60)                   -> convert rad/s to rad/min to m/min
   // / (pi * wheel_diameter)                  -> convert m/min to rotations/min
@@ -465,7 +453,6 @@ void setupNodeHandler() {
 
   nh.getHardware()->setConnection(server, serverPort);
   nh.initNode();
-  broadcaster.init(nh);
 
   // Start to be polite
   nh.advertise(imu);
@@ -959,12 +946,9 @@ void IRAM_ATTR onTimer() {  // simple function to be called every period
 
 
 void setup() {
-
-
-
-  setupXV11();
   // put your setup code here, to run once
-  //  Serial.begin(115200);
+  
+  setupXV11();
   setupWiFi();
   setupSensors();
   setupMotors();
@@ -974,8 +958,6 @@ void setup() {
   // configure encoder interrupt
   pinMode(encodPinA, INPUT_PULLUP);
   pinMode(encodPinB, INPUT_PULLUP);
-  //  digitalWrite(encodPinA, HIGH);                // turn on pullup resistor
-  //  digitalWrite(encodPinB, HIGH);
   attachInterrupt(encodPinA, encoder1, CHANGE);
   attachInterrupt(encodPinB, encoder2, CHANGE);
 
@@ -990,40 +972,31 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly
-  nh.spinOnce();
+  nh.spinOnce();                            // process subscriber callbacks
 
-
-  getXV11Readings();  // poll packet of data from LDS
-
-
-  if (currentAngle == 359) {  // enter LDS publish on full LDS revolution
-    // publish every ~200ms
+  getXV11Readings();                        // poll packet of data from LDS
+  if (currentAngle == 359) {                // enter LDS publish on full LDS revolution, every ~217ms ,at 4.6Hz
     publishLIDAR(millis() - LDSlastMilli);
     LDSlastMilli = millis();
-    nh.spinOnce();
   }
-
 
   if ((millis() - lastMilli) >= LOOPTIME) {  // enter timed loop
 
+    // get IMU data and publish
     getGyroReadings();
     getAccReadings();
     publishIMU(millis() - lastMilli);
 
-    getMotorDataPub(millis() - lastMilli);  // getMotorData since last publish
+    // get ODOM data and publish
+    getMotorDataPub(millis() - lastMilli);
     publishODOM(millis() - lastMilli);
 
-    lastMilli = millis();  // pass millis() into lastMilli
-    nh.spinOnce();
+    // timestamp of last publish
+    lastMilli = millis();                    // pass millis() into lastMilli
   }
 
-
-
-
-
-
-
-  if ((millis() - lastMilli) > LOOPTIME) {  //print a warning if execution time of the loop in longer than the specified looptime
+  if ((millis() - lastMilli) > LOOPTIME) {
+    //print a warning if execution time of the loop in longer than the specified looptime
     Serial.println(" Too Long! LOOPTIME: " + String((millis() - lastMilli)));
   }
 

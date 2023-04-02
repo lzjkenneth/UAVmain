@@ -9,9 +9,9 @@ This project is ongoing and maintained for educational purposes! Stay tuned for 
 
 | Directory | Description |
 | --- | --- |
-| Arduino | Arduino library and .ino files for the low level controller |
-| Example files | Sample code files provided in the workshop |
-| Workspace | Linux ROS workspace files for the high level controller |
+| [Arduino](./Arduino) | Arduino library and .ino files for the low level controller |
+| [Example files](./Example%20files) | Sample code files provided in the workshop |
+| [workspace](./workspace) | Linux ROS workspace files for the high level controller |
 
 more documentation is on the way!
 

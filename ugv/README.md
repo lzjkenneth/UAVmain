@@ -38,9 +38,10 @@ A Laser Distance Sensor (LDS) was added in continuation of this project! Here ar
 
   
 
-  Motor powered by 3.3v, flyback diode (BAT85) between motor terminals.
-  Low side driver transistor (2N3904) collector on MOT-, base to PWM output (32768hz 10bit res.), emitter to GND
-  5V -> 3.3V level shifter between LDS TX and ESP RX
+  Motor powered by 3.3v, flyback diode (BAT85) between motor terminals.  
+  Low side driver transistor (2N3904) collector on MOT-, base to PWM output (32768hz 10bit res.), emitter to GND.  
+  level shifter (BSS138) between LDS TX (5V) and ESP RX (3.3V)
+  
 
   ### Software:
   

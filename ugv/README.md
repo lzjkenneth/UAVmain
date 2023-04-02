@@ -5,52 +5,46 @@ This project is ongoing and maintained for educational purposes! Stay tuned for 
 
 ## Directory
 
-Arduino -> Arduino .ino and library files for the low level controller
-
-Example files -> Sample code provided for our day 1 workshop
-
-workspace -> Linux ros workspace files for the high level controller
 
 
-
+| Directory | Description |
+| --- | --- |
+| Arduino | Arduino library and .ino files for the low level controller |
+| Example files | Sample code files provided in the workshop |
+| Workspace | Linux ROS workspace files for the high level controller |
 
 more documentation is on the way!
 
 
 
 
-### LDS extension:
 
-#### An LDS was added in continuation of this project! Here are the connection details as follows:
+## LDS extension:
+A Laser Distance Sensor (LDS) was added in continuation of this project! Here are the details as follows:
+<details>
+    <summary>Click me</summary>
+  
+  ### Physical Connections:
+  
+  XIAOMI 1S LDS pinout connections
 
-XIAOMI 1S LDS pinouts
+  | Pin no. | on LDS | connected to |
+  | --- | --- | --- |
+  | 1 | MOT+ | 3.3V |
+  | 2 | GND | GND |
+  | 3 | MOT- | base of low side driver transistor |
+  | 4 | TX | 5V -> 3.3V level shifter, to any designated RX pin |
+  | 5 | VCC | 5V |
 
-- MOT+
+  
 
-- GND
+  Motor powered by 3.3v, flyback diode (BAT85) between motor terminals.
+  Low side driver transistor (2N3904) collector on MOT-, base to PWM output (32768hz 10bit res.), emitter to GND
+  5V -> 3.3V level shifter between LDS TX and ESP RX
 
-- MOT-
+  ### Software:
+  
+  LDS interfacing code was referenced and edited from https://github.com/getSurreal/XV_Lidar_Controller
 
-- TX
+</details>
 
-- VCC (+5V)
-
-Motor powered by 3.3v, flyback diode between motor terminals.
-Low side driver transistor collector on MOT-, base to PWM output (32768hz 10bit res.), emitter to GND
-10k ohm resistor between LDS TX and ESP RX
-
-- MOT+ to 3.3V
-
-- GND to GND
-
-- MOT- to base of Low side driver transistor
-
-- TX to 10k ohm resistor, to any designated RX pin
-
-- VCC to 5V
-
-
-transistor used: 2N3904
-
-flyback diode used: BAT85
->>>>>>> 00dad3c35e3e19b6317d79662334deb289178a02
